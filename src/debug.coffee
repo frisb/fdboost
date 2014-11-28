@@ -24,11 +24,20 @@ class Debug
     @buf = null
     
   buffer: (description, data, transformer, scope) ->
-    if (@isActive)
-      @buf = Object.create(null) if (@buf is null)
+    if (@isActive && typeof(data) isnt 'undefined')
+      @buf = Object.create(null) if @buf is null
       
-      data = transformer.call(scope || @, data) if transformer
-      
+      try
+        data = transformer.call(scope, data) if transformer && typeof scope isnt 'undefined'
+      catch e
+        @log()
+        @buffer('message', e.message)
+        @buffer('description', description)
+        @buffer('data', data)
+        @buffer('transformer', transformer)
+        @buffer('scope', scope)
+        @log('debug error')
+        console.log(e.message)
       @buf[description] = data
       
   log: (text) ->

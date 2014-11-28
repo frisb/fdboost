@@ -4,24 +4,14 @@ class FDBoost
     @__db = null
     
     @init(fdb)
+    
+    @encoding = require('./encoding')(@)
+    @range = require('./range')(@)
 
   init: (fdb) ->
     @__fdb = fdb if fdb
   
   Debug: require('./debug')
-    
-  #packValue: require('./packvalue')
-  #unpackValue: require('./unpackvalue')
-  #packArray: require('./packarray')
-  #unpackArray: require('./unpackarray')
-  #countKeys: require('./countkeys')
-  #countClustered: require('./clusteredcounter')
-  #
-  getLastKey: require('./getlastkey')
-  
-  RangeQuery: require('./rangequery')
-  
-  __getBoundariesTaskPrototype: require('./boundariestask')
   
   Object.defineProperties @::, 
     fdb: 
@@ -33,10 +23,6 @@ class FDBoost
       get: ->
         @__db = @fdb.open() if (!@__db)
         @__db
-            
-  
-    BoundariesTask:
-      get: -> @__getBoundariesTaskPrototype()
  
 module.exports = (fdb) ->
   new FDBoost(fdb)

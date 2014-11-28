@@ -1,7 +1,5 @@
-module.exports = ->
-  FDBoost = @
-  fdb = @fdb
-  db = fdb.open()
+module.exports = (FDBoost) ->
+  fdb = FDBoost.fdb
   
   sendBoundaryKeys = (tr, master, keyRange) =>
     progress = if typeof(master.options.progress) isnt 'undefined' then '>p' else ''
@@ -63,8 +61,7 @@ module.exports = ->
       
   class BoundariesTask extends require('parallelize')
     start: ->
-      db = @options.tr || fdb.open()
-      transactionalDistribute(db, @, complete)
+      transactionalDistribute(@options.tr || FDBoost.db, @, complete)
       
     processWorkerMessage: (data) ->
       parts = data.split('>')
