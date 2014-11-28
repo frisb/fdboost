@@ -1,14 +1,20 @@
 surreal = require('surreal')
+EPOCH_DATE = new Date(1900, 0, 1)
 
-buffer = (typeCode, buf) ->
-  if buf
-    Buffer.concat([typeCode, buf], buf.length + 1) 
-  else 
-    typeCode
-  
-module.exports = (v) ->
+nb = require('numeric-buffer')
+
+module.exports = (value, prefix) ->
   fdb = @FDBoost.fdb
   typeCodes = @FDBoost.encoding.typeCodes
+  prefix = new Buffer(prefix, 'ascii') if prefix
+    
+  buffer = (typeCode, buf) ->
+    start = if prefix then Buffer.concat([prefix, typeCode], prefix.length + 1) else typeCode
+    
+    if buf
+      Buffer.concat([start, buf], start.length + buf.length)
+    else 
+      start
     
   encode = (val) ->
     return val if val is '\xff'
@@ -48,9 +54,17 @@ module.exports = (v) ->
           
         else if (val instanceof Date)
           # date
-          buf = new Buffer(10)
-          console.log(val.getTime())
-          buf.writeUInt32LE(val.getTime(), 0)
+          buf = new Buffer(8)
+          
+          days = ~~((val.getTime() - EPOCH_DATE.getTime()) / (1000 * 60 * 60 * 24))
+          seconds = val.getHours() * 60 * 60
+          seconds += val.getMinutes() * 60
+          seconds += val.getSeconds()
+          milliseconds = (seconds * 1000) + val.getMilliseconds()
+          
+          buf.writeInt32LE(days, 0)
+          buf.writeUInt32LE(milliseconds, 4)
+          
           buffer(typeCodes.date, buf)                             
           
         else if (val instanceof Array)
@@ -65,4 +79,4 @@ module.exports = (v) ->
         else
           throw new Error("the encode function accepts only string, number, boolean, date, array and object")
           
-  encode(v)
+  encode(value)
