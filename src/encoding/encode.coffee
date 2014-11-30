@@ -1,13 +1,29 @@
 surreal = require('surreal')
 EPOCH_DATE = new Date(1900, 0, 1)
 
-nb = require('numeric-buffer')
-
-module.exports = (value, prefix) ->
+###*
+   * Encode value to buffer
+   * @method
+   * @param {string} prefix Optional prefix identifier.
+   * @param {(undefined|string|integer|double|boolean|null|date|array|object)} value Value to encode.
+   * @return {Buffer} Buffer
+  ###
+module.exports = (prefix, value) ->
+  if (!value) 
+    value = prefix
+    value = null
+    
   fdb = @FDBoost.fdb
   typeCodes = @FDBoost.encoding.typeCodes
   prefix = new Buffer(prefix, 'ascii') if prefix
-    
+  
+  ###*
+   * Build buffer with prefix, typeCode and value
+   * @method
+   * @param {Buffer} typeCode Type code buffer.
+   * @param {Buffer} buf Value buffer.
+   * @return {Buffer} Buffer
+  ###  
   buffer = (typeCode, buf) ->
     start = if prefix then Buffer.concat([prefix, typeCode], prefix.length + 1) else typeCode
     
@@ -15,7 +31,13 @@ module.exports = (value, prefix) ->
       Buffer.concat([start, buf], start.length + buf.length)
     else 
       start
-    
+  
+  ###*
+   * Encode value to buffer
+   * @method
+   * @param {(undefined|string|integer|double|boolean|null|date|array|object)} val Value to encode.
+   * @return {Buffer} Buffer
+  ###
   encode = (val) ->
     return val if val is '\xff'
     

@@ -143,7 +143,7 @@ module.exports = (FDBoost) ->
   
   class Query extends EventEmitter
     ###*
-     * Creates a new RangeQuery instance
+     * Creates a new Query instance
      * @class
      * @param {object} options Settings.
      * @param {(Buffer|fdb.KeySelector)} [options.begin] First key in the query range.
@@ -163,7 +163,7 @@ module.exports = (FDBoost) ->
      * @property {(iterator|want_all|small|medium|large|serial|exact)} streamingMode fdb.streamingMode property that permits the API client to customize performance tradeoff by providing extra information about how the iterator will be used.
      * @property {boolean} nonTransactional Reset transaction on expiry and start.
      * @property {boolean} snapshot Defines whether range reads should be snapshot reads.
-     * @return {RangeQuery} a RangeQuery instance.
+     * @return {Query} a Query instance.
     ###
     constructor: (options) ->
       super()

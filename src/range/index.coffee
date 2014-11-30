@@ -1,10 +1,22 @@
+###*
+ * Get a new RangeNamespace instance 
+ * @method
+ * @param {FDBBoost} FDBBoost FDBBoost instance.
+ * @return {RangeNamespace} a RangeNamespace instance
+###    
 module.exports = (FDBoost) ->
   class RangeNamespace 
+    ###*
+     * Creates a new RangeNamespace instance
+     * @class
+     * @property {BoundariesTask} BoundariesTask BoundariesTask class.
+     * @property {Query} Query Query class.
+     * @return {RangeNamespace} a RangeNamespace instance.
+    ###
     constructor: ->
       @BoundariesTask = require('./boundariestask')(FDBoost)
       @Query = require('./query')(FDBoost)
-    
-    
+      
     countKeys: require('./countkeys')(FDBoost)
     
     ###*

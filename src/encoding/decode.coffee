@@ -1,17 +1,30 @@
 surreal = require('surreal')
 
-validatePrefix = (buf, controlBuf) ->
-  len = controlBuf.length
+###*
+ * Check buffer starts with prefix
+ * @method
+ * @param {Buffer} buf Buffer to check.
+ * @param {Buffer} prefixBuf Prefix buffer.
+ * @return {boolean} Boolean
+###
+validatePrefix = (buf, prefixBuf) ->
+  len = prefixBuf.length
   
-  return false if buf.length <= controlBuf.length
+  return false if buf.length <= prefixBuf.length
   
   prefix = buf.slice(0, len)
   
   for i in [0...len]
-    return false if prefix[i] isnt controlBuf[i]
+    return false if prefix[i] isnt prefixBuf[i]
   
   return true
 
+###*
+ * Decode date from buffer
+ * @method
+ * @param {Buffer} buf Buffer to decode.
+ * @return {Date} Date
+###
 parseDate = (buf) ->
   days = buf.readInt32LE(0)
   milliseconds = buf.readUInt32LE(4)
@@ -22,7 +35,18 @@ parseDate = (buf) ->
   
   date
 
-module.exports = (buffer, prefix) ->
+###*
+ * Decode value from buffer
+ * @method
+ * @param {string} prefix Optional prefix identifier.
+ * @param {Buffer} buffer Buffer to decode.
+ * @return {(undefined|string|integer|double|boolean|null|date|array|object)} Value
+###
+module.exports = (prefix, buffer) ->
+  if (!buffer) 
+    buffer = prefix
+    prefix = null
+  
   return null if !buffer
   
   fdb = @FDBoost.fdb
@@ -37,6 +61,12 @@ module.exports = (buffer, prefix) ->
     else
       throw new Error("Invalid prefix \"#{prefix}\".")
   
+  ###*
+   * Decode value from buffer
+   * @method
+   * @param {Buffer} buf Buffer to decode.
+   * @return {(undefined|string|integer|double|boolean|null|date|array|object)} Value
+  ###
   decode = (buf) ->
     typeCode = buf.slice(typeCodeIndex, 4).toString('hex')
     buf = buf.slice(typeCodeIndex + 1) if typeCode isnt '00' && typeCode isnt '05'
