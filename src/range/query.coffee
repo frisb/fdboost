@@ -209,11 +209,11 @@ module.exports = (FDBoost) ->
       
       debug.log('execute')
         
-      complete = (err, res) =>
+      complete = (err, result) =>
         if (err)
           @emit('error', err)
         else
-          @emit('end', res)
+          @emit('end', result)
         return
       
       toBeContinued = =>
@@ -223,11 +223,11 @@ module.exports = (FDBoost) ->
         txi()
         return
         
-      pastVersionCatchingCallback = (err, res) =>
+      pastVersionCatchingCallback = (err, result) =>
         if (err && @nonTransactional && err.message is 'past_version')
           toBeContinued()
         else
-          complete(err, res)
+          complete(err, result)
           
         return
         

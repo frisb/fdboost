@@ -15,17 +15,15 @@ module.exports = (FDBoost) ->
     ###
     constructor: (@FDBoost) ->
       @typeCodes =
-        'undefined': 0
-        'string': 1
-        'integer': 2
-        'double': 3
-        'boolean': 4
-        'null': 5
-        'date': 6
-        'array': 7
-        'object': 8
-    
-      @buffers = require('./buffers')(@)
+        'undefined': new Buffer('00', 'hex')
+        'string': new Buffer('01', 'hex')
+        'integer': new Buffer('02', 'hex')
+        'double': new Buffer('03', 'hex')
+        'boolean': new Buffer('04', 'hex')
+        'null': new Buffer('05', 'hex')
+        'date': new Buffer('06', 'hex')
+        'array': new Buffer('07', 'hex')
+        'object': new Buffer('08', 'hex')
   
     ###*
      * Encode value to buffer
