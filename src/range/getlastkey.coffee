@@ -22,8 +22,14 @@ module.exports = (FDBoost) ->
    * @param {FDBoost~range~getLastKeyCallback} callback Callback.
    * @return {undefined}
   ###      
+  keyToString = (key) ->
+    if (key.asFoundationDBKey)
+      new Buffer(key.asFoundationDBKey()).toString()
+    else
+      key
+  
   getLastKey = (tr, keyPrefix, callback) ->
-    debug.buffer('keyPrefix', keyPrefix)
+    debug.buffer('keyPrefix', keyPrefix, keyToString, @)
     debug.log('getLastKey')
       
     iterator = tr.getRangeStartsWith(keyPrefix, { limit: 1, reverse: true })
