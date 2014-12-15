@@ -21,14 +21,14 @@ module.exports = (FDBoost) ->
       @currentObject = null
       @key = null
         
-    query.on 'end', (result) =>
-      if (@assembled.length > 0)
-        @emit('data', @assembled)
-      else if (@currentObject isnt null)
-        @currentObject.reset(true)
-        @emit('data', [@currentObject])
+      query.on 'end', (result) =>
+        if (@assembled.length > 0)
+          @emit('data', @assembled)
+        else if (@currentObject isnt null)
+          @currentObject.reset(true)
+          @emit('data', [@currentObject])
       
-      @emit('end')
+        @emit('end')
         
     out: (callback) ->
       if (@assembled.length > 0)

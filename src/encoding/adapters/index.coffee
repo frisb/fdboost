@@ -5,10 +5,10 @@ EPOCH_DATE = new Date(1900, 0, 1)
 module.exports = (encoding) ->
   types: require('./typecodes')
   
-  'Undefined': class UndefinedAdapter extends AbstractAdapter   
+  Undefined: class UndefinedAdapter extends AbstractAdapter   
     getValue: -> undefined
   
-  'String': class StringAdapter extends AbstractAdapter   
+  String: class StringAdapter extends AbstractAdapter   
     loadData: (value) ->
       @initData(value.length)
       @writeString(value)
@@ -16,31 +16,34 @@ module.exports = (encoding) ->
     
     getValue: (buffer) -> buffer.toString('utf8', @pos)
   
-  'Integer': class IntegerAdapter extends AbstractAdapter   
+  Integer: class IntegerAdapter extends AbstractAdapter   
     loadData: (value) ->
       @initData(4)
       @writeInt32BE(value)
+      return
       
     getValue: (buffer) -> buffer.readInt32BE(@pos)
       
-  'Double': class DoubleAdapter extends AbstractAdapter   
+  Double: class DoubleAdapter extends AbstractAdapter   
     loadData: (value) ->
       @initData(8)
       @writeDoubleBE(value)
+      return
       
     getValue: (buffer) -> buffer.readDoubleBE(@pos)
   
-  'Boolean': class BooleanAdapter extends AbstractAdapter   
+  Boolean: class BooleanAdapter extends AbstractAdapter   
     loadData: (value) ->
       @initData(1)
       @writeUInt8(if value then 1 else 0)
+      return
       
     getValue: (buffer) -> buffer.readUInt8(@pos) is 1
       
-  'Null': class NullAdapter extends AbstractAdapter   
+  Null: class NullAdapter extends AbstractAdapter   
     getValue: -> null
   
-  'Date': class DateAdapter extends AbstractAdapter   
+  Date: class DateAdapter extends AbstractAdapter   
     loadData: (value) ->
       @initData(8)
       
@@ -51,7 +54,8 @@ module.exports = (encoding) ->
       milliseconds = (seconds * 1000) + value.getMilliseconds()
       
       @writeInt32LE(days)
-      @writeUInt32LE(milliseconds)    
+      @writeUInt32LE(milliseconds)   
+      return 
       
     getValue: (buffer) ->
       days = buffer.readInt32LE(@pos)
@@ -63,22 +67,24 @@ module.exports = (encoding) ->
       
       date
   
-  'Array': class ArrayAdapter extends AbstractAdapter   
+  Array: class ArrayAdapter extends AbstractAdapter   
     loadData: (value) ->
       d = encoding.FDBoost.fdb.tuple.pack(encoding.encode(item) for item in value)
       @initData(d.length)
       @copyFrom(d)
+      return
       
     getValue: (buffer) ->
       d = new Buffer(buffer.length - @pos)
       buffer.copy(d, 0, @pos)
       (encoding.decode(item) for item in encoding.FDBoost.fdb.tuple.unpack(d))
   
-  'Object': class ObjectAdapter extends AbstractAdapter   
+  Object: class ObjectAdapter extends AbstractAdapter   
     loadData: (value) ->
       json = surreal.serialize(value)
       @initData(json.length)
       @writeString(json)
+      return
       
     getValue: (buffer) -> 
       console.log(@pos)

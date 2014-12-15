@@ -35,7 +35,7 @@
     "util"
   ],
   "dependencies": {
-    "fdb": "^2.0.0",
+    "fdb": "^3.0.3",
     "surreal": "*",
     "writeln": "0.0.3"
   }

@@ -16,7 +16,7 @@ class FDBoost
   Object.defineProperties @::, 
     fdb: 
       get: ->
-        @__fdb = require('fdb').apiVersion(200) if !@__fdb
+        @__fdb = require('fdb').apiVersion(300) if !@__fdb
         @__fdb
         
     db:
