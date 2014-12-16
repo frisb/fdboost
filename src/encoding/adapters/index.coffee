@@ -2,6 +2,12 @@ surreal = require('surreal')
 AbstractAdapter = require('./abstract')
 EPOCH_DATE = new Date(1900, 0, 1)
 
+###*
+ * Get an Adapter factory object to provide an adaptor for typeCode
+ * @method
+ * @param {EncodingNamespace} encoding EncodingNamespace instance.
+ * @return {object} Adapter factory
+###     
 module.exports = (encoding) ->
   types: require('./typecodes')
   
@@ -89,7 +95,13 @@ module.exports = (encoding) ->
     getValue: (buffer) -> 
       console.log(@pos)
       surreal.deserialize(buffer.toString('utf8', @pos))
-            
+  
+  ###*
+   * Get an Adapter for typeCode
+   * @method
+   * @param {integer} typeCode Type code.
+   * @return {AbstractAdapter} AbstractAdapter extension
+  ###            
   get: (typeCode) ->
     switch (typeCode)
       when @types.undefined then @Undefined

@@ -19,7 +19,7 @@ module.exports = (FDBoost) ->
     ###*
      * Encode value to buffer
      * @method
-     * @param {string} prefix Optional prefix identifier.
+     * @param {string} [prefix] String identifier.
      * @param {(undefined|string|integer|double|boolean|null|date|array|object)} value Value to encode.
      * @return {Buffer} Buffer
     ###
@@ -43,11 +43,10 @@ module.exports = (FDBoost) ->
     ###*
      * Decode value from buffer
      * @method
-     * @param {string} prefix Optional prefix identifier.
      * @param {Buffer} buffer Buffer to decode.
+     * @param {string} [prefix] String identifier.
      * @return {(undefined|string|integer|double|boolean|null|date|array|object)} Value
     ###
-    
     decode: (buffer, prefix) ->
       return null if !buffer
       

@@ -1,3 +1,17 @@
+###*
+ * Type codes dictionary.
+ * @instance
+ * @property {integer} undefined
+ * @property {integer} string
+ * @property {integer} integer
+ * @property {integer} double
+ * @property {integer} boolean
+ * @property {integer} null
+ * @property {integer} date
+ * @property {integer} array
+ * @property {integer} object
+ * @function {Function} get Returns typeCode value for name.
+###   
 module.exports =
   'undefined': 0
   'string': 1
@@ -8,8 +22,8 @@ module.exports =
   'date': 6
   'array': 7
   'object': 8
-  'get': (value) ->
-    switch typeof value
+  'get': (name) ->
+    switch typeof name
       when 'undefined' then @undefined
       when 'string' then @string
       when 'number' 
