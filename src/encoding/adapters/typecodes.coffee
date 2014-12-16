@@ -22,6 +22,13 @@ module.exports =
   'date': 6
   'array': 7
   'object': 8
+  
+  ###*
+   * Gets type code value for name.
+   * @method
+   * @param {string} name Type name to get value for.
+   * @return {integer} Type code value
+  ###    
   'get': (name) ->
     switch typeof name
       when 'undefined' then @undefined
