@@ -26,11 +26,11 @@ module.exports =
   ###*
    * Gets type code value for name.
    * @method
-   * @param {string} name Type name to get value for.
+   * @param {string} value Value to test type for.
    * @return {integer} Type code value
   ###    
-  'get': (name) ->
-    switch typeof name
+  'get': (value) ->
+    switch typeof value
       when 'undefined' then @undefined
       when 'string' then @string
       when 'number' 

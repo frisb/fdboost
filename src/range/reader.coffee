@@ -11,14 +11,14 @@ resolveKey = (k) ->
   return
 
 ###*
- * Get a Query class to perform a range read operation over the database 
+ * Get a Reader class to perform a range read operation over the database 
  * @method
  * @param {object} FDBBoost FDBBoost instance.
- * @return {Query} Query
+ * @return {Reader} Reader
 ###      
 module.exports = (FDBoost) ->
   fdb = FDBoost.fdb
-  debug = FDBoost.Debug('FDBoost.range.Query')
+  debug = FDBoost.Debug('FDBoost.range.Reader')
   
   ###*
    * The callback format for the iterate method
@@ -31,13 +31,13 @@ module.exports = (FDBoost) ->
    * Iterate over the range results 
    * @method
    * @param {object} tr Transaction.
-   * @param {object} query RangeQuery instance.
+   * @param {object} reader RangeReader instance.
    * @param {string} iteratorType batch|each|array.
    * @param {iterateCallback} callback Callback.
-   * @fires RangeQuery#data
+   * @fires RangeReader#data
    * @return {undefined}
   ###      
-  iterate = (tr, query, iteratorType, callback) ->
+  iterate = (tr, reader, iteratorType, callback) ->
     debug.buffer('iteratorType', iteratorType)
     
     getIteratorCallback = (err, iterator) ->
@@ -47,25 +47,25 @@ module.exports = (FDBoost) ->
         debug.log('iterate')
         
         switch iteratorType
-          when 'array' then query.toArray(iterator, callback)
-          when 'batch' then query.forEachBatch(iterator, callback)
-          when 'each' then query.forEach(iterator, callback)
+          when 'array' then reader.toArray(iterator, callback)
+          when 'batch' then reader.forEachBatch(iterator, callback)
+          when 'each' then reader.forEach(iterator, callback)
             
       return
       
-    query.getIterator(tr, getIteratorCallback)
+    reader.getIterator(tr, getIteratorCallback)
       
     return
           
   transactionalIterate = fdb.transactional(iterate)
   
-  class Query extends EventEmitter
+  class Reader extends EventEmitter
     ###*
-     * Creates a new Query instance
+     * Creates a new Reader instance
      * @class
      * @param {object} options Settings.
-     * @param {(Buffer|fdb.KeySelector)} [options.begin] First key in the query range.
-     * @param {(Buffer|fdb.KeySelector)}} [options.end=undefined] Last key in the query range.
+     * @param {(Buffer|fdb.KeySelector)} [options.begin] First key in the reader range.
+     * @param {(Buffer|fdb.KeySelector)}} [options.end=undefined] Last key in the reader range.
      * @param {number} [options.limit=undefined] Only the first limit keys (and their values) in the range will be returned.
      * @param {boolean} [options.reverse=undefined] Specified if the keys in the range will be returned in reverse order
      * @param {(iterator|want_all|small|medium|large|serial|exact)} [options.streamingMode=undefined] fdb.streamingMode property that permits the API client to customize performance tradeoff by providing extra information about how the iterator will be used.
@@ -73,19 +73,17 @@ module.exports = (FDBoost) ->
      * @param {boolean} [options.snapshot=false] Defines whether range reads should be snapshot reads.
      * @property {array} instances Collection of Document Layer db instances.
      * @property {number} index Current index of the instances collection.
-     * @property {(Buffer|fdb.KeySelector)}} begin First key in the query range.
-     * @property {(Buffer|fdb.KeySelector)}} end Last key in the query range.
+     * @property {(Buffer|fdb.KeySelector)}} begin First key in the reader range.
+     * @property {(Buffer|fdb.KeySelector)}} end Last key in the reader range.
      * @property {Buffer} marker Marker key for transaction expiration continuation point.
      * @property {number} limit Only the first limit keys (and their values) in the range will be returned.
      * @property {boolean} reverse Specified if the keys in the range will be returned in reverse order
      * @property {(iterator|want_all|small|medium|large|serial|exact)} streamingMode fdb.streamingMode property that permits the API client to customize performance tradeoff by providing extra information about how the iterator will be used.
      * @property {boolean} nonTransactional Reset transaction on expiry and start.
      * @property {boolean} snapshot Defines whether range reads should be snapshot reads.
-     * @return {Query} a Query instance.
+     * @return {Reader} a Reader instance.
     ###
     constructor: (options) ->
-      console.log('options', options)
-      
       super()
       @begin = options.begin
       @end = options.end
@@ -120,10 +118,10 @@ module.exports = (FDBoost) ->
     ###
     
     ###*
-     * Get the last key of the range if no end key is provided to the RangeQuery 
+     * Get the last key of the range if no end key is provided to the RangeReader 
      * @method
      * @param {object} tr Transaction.
-     * @param {object} query RangeQuery instance.
+     * @param {object} reader RangeReader instance.
      * @param {getLastKeyCallback} callback Callback.
      * @return {undefined}
     ###      
@@ -143,10 +141,10 @@ module.exports = (FDBoost) ->
     ###
     
     ###*
-     * Initialize the query before iteration
+     * Initialize the reader before iteration
      * @abstract
      * @param {object} tr Transaction.
-     * @param {object} query RangeQuery instance.
+     * @param {object} reader RangeReader instance.
      * @param {initCallback} callback Callback.
      * @return {undefined}
     ###      
@@ -164,7 +162,7 @@ module.exports = (FDBoost) ->
      * Get a LazyIterator instance for the current range read operation 
      * @method
      * @param {object} tr Transaction.
-     * @param {object} query RangeQuery instance.
+     * @param {object} reader RangeReader instance.
      * @param {getIteratorCallback} callback Callback.
      * @return {undefined}
     ###      
@@ -213,7 +211,7 @@ module.exports = (FDBoost) ->
      * @virtual
      * @param {LazyIterator} iterator LazyIterator instance.
      * @param {iterateCallback} callback Callback.
-     * @fires RangeQuery#data
+     * @fires RangeReader#data
      * @return {undefined}
     ###     
     toArray: (iterator, callback) ->
@@ -221,13 +219,14 @@ module.exports = (FDBoost) ->
         @emit('data', arr)
         callback(err)
         return
+      return
     
     ###*
      * Iterate over batch results 
      * @virtual
      * @param {LazyIterator} iterator LazyIterator instance.
      * @param {iterateCallback} callback Callback.
-     * @fires RangeQuery#data
+     * @fires RangeReader#data
      * @return {undefined}
     ###         
     forEachBatch: (iterator, callback) ->
@@ -237,13 +236,14 @@ module.exports = (FDBoost) ->
         return
        
       iterator.forEachBatch(func, callback)
+      return
     
     ###*
      * Iterate over key-value pair results 
      * @virtual
      * @param {LazyIterator} iterator LazyIterator instance.
      * @param {iterateCallback} callback Callback.
-     * @fires RangeQuery#data
+     * @fires RangeReader#data
      * @return {undefined}
     ###     
     forEach: (iterator, callback) ->
@@ -253,15 +253,16 @@ module.exports = (FDBoost) ->
         return
        
       iterator.forEach(func, callback)
+      return
     
     ###*
-     * Execute the query using an iterator type 
+     * Execute the reader using an iterator type 
      * @virtual
      * @param {object} tr Optional transaction.
      * @param {string} iteratorType batch|each|array.
-     * @fires RangeQuery#error
-     * @fires RangeQuery#continue
-     * @fires RangeQuery#end
+     * @fires RangeReader#error
+     * @fires RangeReader#continue
+     * @fires RangeReader#end
      * @return {undefined}
     ###      
     execute: (tr, iteratorType) ->

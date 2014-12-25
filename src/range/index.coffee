@@ -15,7 +15,7 @@ module.exports = (FDBoost) ->
     ###
     constructor: ->
       @BoundariesTask = require('./boundariestask')(FDBoost)
-      @Query = require('./query')(FDBoost)
+      @Reader = require('./reader')(FDBoost)
       
     countKeys: require('./countkeys')(FDBoost)
     
