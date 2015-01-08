@@ -258,7 +258,7 @@ module.exports = (FDBoost) ->
     ###*
      * Execute the reader using an iterator type 
      * @virtual
-     * @param {object} tr Optional transaction.
+     * @param {object} [tr=null] transaction.
      * @param {string} iteratorType batch|each|array.
      * @fires RangeReader#error
      * @fires RangeReader#continue
