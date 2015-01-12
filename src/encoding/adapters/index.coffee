@@ -2,6 +2,16 @@ surreal = require('surreal')
 AbstractAdapter = require('./abstract')
 EPOCH_DATE = new Date(1900, 0, 1)
 
+class Undefined extends Buffer
+class String extends Buffer
+class Integer extends Buffer
+class Double extends Buffer
+class Boolean extends Buffer
+class Null extends Buffer
+class DateTime extends Buffer
+class Array extends Buffer
+class Object extends Buffer
+
 ###*
  * Get an Adapter factory object to provide an adaptor for typeCode
  * @method
@@ -11,10 +21,16 @@ EPOCH_DATE = new Date(1900, 0, 1)
 module.exports = (encoding) ->
   types: require('./typecodes')
   
-  Undefined: class UndefinedAdapter extends AbstractAdapter   
+  Undefined: class UndefinedAdapter extends AbstractAdapter    
+    getType: -> 
+      Undefined
+    
     getValue: -> undefined
   
   String: class StringAdapter extends AbstractAdapter   
+    getType: -> 
+      String
+  
     loadData: (value) ->
       @initData(value.length)
       @writeString(value)
@@ -22,7 +38,10 @@ module.exports = (encoding) ->
     
     getValue: (buffer) -> buffer.toString('utf8', @pos)
   
-  Integer: class IntegerAdapter extends AbstractAdapter   
+  Integer: class IntegerAdapter extends AbstractAdapter     
+    getType: -> 
+      Integer
+   
     loadData: (value) ->
       @initData(4)
       @writeInt32BE(value)
@@ -30,7 +49,10 @@ module.exports = (encoding) ->
       
     getValue: (buffer) -> buffer.readInt32BE(@pos)
       
-  Double: class DoubleAdapter extends AbstractAdapter   
+  Double: class DoubleAdapter extends AbstractAdapter      
+    getType: -> 
+      Double
+  
     loadData: (value) ->
       @initData(8)
       @writeDoubleBE(value)
@@ -38,7 +60,10 @@ module.exports = (encoding) ->
       
     getValue: (buffer) -> buffer.readDoubleBE(@pos)
   
-  Boolean: class BooleanAdapter extends AbstractAdapter   
+  Boolean: class BooleanAdapter extends AbstractAdapter    
+    getType: -> 
+      String
+    
     loadData: (value) ->
       @initData(1)
       @writeUInt8(if value then 1 else 0)
@@ -46,10 +71,16 @@ module.exports = (encoding) ->
       
     getValue: (buffer) -> buffer.readUInt8(@pos) is 1
       
-  Null: class NullAdapter extends AbstractAdapter   
+  Null: class NullAdapter extends AbstractAdapter      
+    getType: -> 
+      Null
+  
     getValue: -> null
   
-  Date: class DateAdapter extends AbstractAdapter   
+  DateTime: class DateTimeAdapter extends AbstractAdapter     
+    getType: -> 
+      DateTime
+   
     loadData: (value) ->
       @initData(8)
       
@@ -73,7 +104,10 @@ module.exports = (encoding) ->
       
       date
   
-  Array: class ArrayAdapter extends AbstractAdapter   
+  Array: class ArrayAdapter extends AbstractAdapter      
+    getType: -> 
+      Array
+  
     loadData: (value) ->
       d = encoding.FDBoost.fdb.tuple.pack(encoding.encode(item) for item in value)
       @initData(d.length)
@@ -85,7 +119,10 @@ module.exports = (encoding) ->
       buffer.copy(d, 0, @pos)
       (encoding.decode(item) for item in encoding.FDBoost.fdb.tuple.unpack(d))
   
-  Object: class ObjectAdapter extends AbstractAdapter   
+  Object: class ObjectAdapter extends AbstractAdapter       
+    getType: -> 
+      Object
+   
     loadData: (value) ->
       json = surreal.serialize(value)
       @initData(json.length)
@@ -110,7 +147,7 @@ module.exports = (encoding) ->
       when @types.double then @Double
       when @types.boolean then @Boolean
       when @types.null then @Null
-      when @types.date then @Date
+      when @types.datetime then @DateTime
       when @types.array then @Array
       when @types.object then @Object
       else

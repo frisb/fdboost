@@ -1,3 +1,5 @@
+class EncodedString extends Buffer
+
 module.exports = class AbstractAdapter
   ###*
    * Extend an AbstractAdapter instance for encoding and decoding typed values.
@@ -17,13 +19,22 @@ module.exports = class AbstractAdapter
       @loadData(valueOrBuffer)
   
   ###*
+   * Get Buffer type.
+   * @abstract
+   * @return {class}
+  ###
+  getType: ->
+    throw new Error('not implemented')
+  
+  ###*
    * Initializes a new buffer.
    * @method
    * @param {integer} size Size of new buffer.
    * @return {undefined}
   ###
   initData: (size) ->
-    @data = new Buffer(@pos + size)
+    TypedBuffer = @getType()
+    @data = new TypedBuffer(@pos + size)
     return
   
   ###*

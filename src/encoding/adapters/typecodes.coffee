@@ -19,7 +19,7 @@ module.exports =
   'double': 3
   'boolean': 4
   'null': 5
-  'date': 6
+  'datetime': 6
   'array': 7
   'object': 8
   
@@ -39,7 +39,7 @@ module.exports =
       when 'boolean' then @boolean
       else 
         if (value is null) then @null
-        else if (value instanceof Date) then @date
+        else if (value instanceof Date) then @datetime
         else if (value instanceof Array) then @array
         else if (value instanceof Object)  then @object
         else
