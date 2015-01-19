@@ -11,6 +11,7 @@ class Null extends Buffer
 class DateTime extends Buffer
 class Array extends Buffer
 class Object extends Buffer
+class Function extends Buffer
 
 ###*
  * Get an Adapter factory object to provide an adaptor for typeCode
@@ -131,6 +132,10 @@ module.exports = (encoding) ->
       
     getValue: (buffer) -> 
       surreal.deserialize(buffer.toString('utf8', @pos))
+
+  Function: class FunctionAdapter extends ObjectAdapter       
+    getType: -> 
+      Function
   
   ###*
    * Get an Adapter for typeCode
@@ -149,5 +154,6 @@ module.exports = (encoding) ->
       when @types.datetime then @DateTime
       when @types.array then @Array
       when @types.object then @Object
+      when @types.function then @Function
       else
         throw new Error("Unknown typeCode \"#{typeCode}\".")

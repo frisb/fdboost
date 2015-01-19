@@ -22,6 +22,7 @@ module.exports =
   'datetime': 6
   'array': 7
   'object': 8
+  'function': 9
   
   ###*
    * Gets type code value for name.
@@ -37,6 +38,7 @@ module.exports =
         if (value % 1 is 0) then @integer
         else @double
       when 'boolean' then @boolean
+      when 'function' then @function
       else 
         if (value is null) then @null
         else if (value instanceof Date) then @datetime

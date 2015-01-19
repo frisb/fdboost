@@ -31,6 +31,21 @@ testAll = (prefix) ->
       testType(prefix, 'mixed array', [{  }, 'string', 1, [1.23]])
       testType(prefix, 'object', { x: 1, y: 2 })
 
+      describe 'function', ->
+        it 'should return function', ->
+          fn = (param1, param2, param3) ->
+            param1 + param2 * param3
+
+          encoded = FDBoost.encoding.encode(fn, prefix)
+          decoded = FDBoost.encoding.decode(encoded, prefix)
+
+          console.log('\tprefix', prefix) if prefix
+          console.log('\tencoded', encoded)
+          console.log('\tdecoded', decoded)
+          console.log()
+
+          assert.deepEqual(fn(1, 2, 3), decoded(1, 2, 3))
+
 describe 'Encode and Decode', testAll()
 describe 'Encode and Decode with Prefix', testAll('my_prefix')
   
