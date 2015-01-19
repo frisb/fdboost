@@ -130,7 +130,6 @@ module.exports = (encoding) ->
       return
       
     getValue: (buffer) -> 
-      console.log(@pos)
       surreal.deserialize(buffer.toString('utf8', @pos))
   
   ###*

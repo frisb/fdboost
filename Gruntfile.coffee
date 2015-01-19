@@ -19,14 +19,14 @@ module.exports = (grunt) ->
           ext: '.js'
         ]
 
-    #mochaTest:
-      #test:
-        #options:
-          #reporter: 'spec'
-          #require: 'coffee-script/register'
-        #src: ['test/**/*.coffee']
+    mochaTest:
+      test:
+        options:
+          reporter: 'spec'
+          require: 'coffee-script/register'
+        src: ['test/**/*.coffee']
 
   grunt.loadNpmTasks('grunt-contrib-clean')
   grunt.loadNpmTasks('grunt-contrib-coffee')
   grunt.loadNpmTasks('grunt-mocha-test')
-  grunt.registerTask('default', ['clean', 'coffee']) # , 'mochaTest'])
+  grunt.registerTask('default', ['clean', 'coffee', 'mochaTest'])
