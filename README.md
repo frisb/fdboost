@@ -1,14 +1,16 @@
-# Deepak [![Build Status](https://travis-ci.org/frisb/deepak.png)](http://travis-ci.org/frisb/deepak)
+# FDBoost [![Build Status](https://travis-ci.org/frisb/fdboost.png)](http://travis-ci.org/frisb/fdboost)
 
-[![npm status badge](https://nodei.co/npm/deepak.png?stars=true&downloads=true)](https://nodei.co/npm/deepak/)
+[![npm status badge](https://nodei.co/npm/fdboost.png?stars=true&downloads=true)](https://nodei.co/npm/fdboost/)
 
-Deepak is a highspeed packer & unpacker for strongly typed FoundationDB key and value data.
+FDBoost is a collection of utilities for FoundationDB enhancing the functionality of the FoundationDB node.js bindings.
+
+Includes a high performance range key counting method and  
 
 This module is still early alpha and work is in progress. All contributions are welcome.
 
 ## Installation
 ```
-npm install deepak
+npm install fdboost
 ```
 
 ## License
@@ -36,4 +38,4 @@ CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-[![Analytics](https://ga-beacon.appspot.com/UA-40562957-9/deepak/readme)](https://github.com/igrigorik/ga-beacon)
+[![Analytics](https://ga-beacon.appspot.com/UA-40562957-11/fdboost/readme)](https://github.com/igrigorik/ga-beacon)
