@@ -4,5 +4,6 @@ node_js:
 before_install:
   - npm update -g npm
   - npm install -g grunt-cli
+  - npm install -g coffee-script
   - wget --no-check-certificate https://foundationdb.com/downloads/token/3ffff3ae-0122-45c5-aea3-4be53eaa838b/key-value-store/3.0.5/foundationdb-clients_3.0.5-1_amd64.deb
   - sudo dpkg -i foundationdb-clients_3.0.5-1_amd64.deb
