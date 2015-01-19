@@ -29,4 +29,4 @@ module.exports = (grunt) ->
   grunt.loadNpmTasks('grunt-contrib-clean')
   grunt.loadNpmTasks('grunt-contrib-coffee')
   grunt.loadNpmTasks('grunt-mocha-test')
-  grunt.registerTask('default', ['clean', 'coffee'])
+  grunt.registerTask('default', ['clean', 'coffee', 'mochaTest'])
