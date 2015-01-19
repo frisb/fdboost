@@ -4,7 +4,7 @@
 
 FDBoost is a collection of utilities for FoundationDB enhancing the functionality of the FoundationDB node.js bindings.
 
-Includes a high performance range key counting method and  
+Includes utilities for encoding tuples with strongly typed values and a high performance range key counting method (thanks to Christophe Chevalier @Doxsense).
 
 This module is still early alpha and work is in progress. All contributions are welcome.
 
