@@ -1,3 +1,4 @@
+require('coffee-script/register')
 assert = require('assert')
 FDBoost = require('../lib/index')()
 
