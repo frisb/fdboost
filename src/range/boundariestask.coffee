@@ -59,7 +59,7 @@ module.exports = (FDBoost) ->
   
   transactionalDistribute = fdb.transactional(distribute)
       
-  class BoundariesTask extends require('parallelize')
+  class BoundariesTask extends require('wingman')
     start: ->
       transactionalDistribute(@options.tr || FDBoost.db, @, complete)
       
