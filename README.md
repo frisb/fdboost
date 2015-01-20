@@ -3,7 +3,6 @@
 [![Dependency Status](https://gemnasium.com/frisb/fdboost.svg)](https://gemnasium.com/frisb/fdboost)
 [![Code Climate](https://codeclimate.com/github/frisb/fdboost/badges/gpa.svg)](https://codeclimate.com/github/frisb/fdboost)
 [![npm version](https://badge.fury.io/js/fdboost.svg)](http://badge.fury.io/js/fdboost)
-[![npm status badge](https://nodei.co/npm/fdboost.png?stars=true&downloads=true)](https://nodei.co/npm/fdboost/)
 
 FDBoost is a collection of utilities for FoundationDB enhancing the functionality of the FoundationDB node.js bindings.
 
@@ -51,6 +50,8 @@ Debug boundariestask class
 ## Installation
 ```
 npm install fdboost
+
+[![npm status badge](https://nodei.co/npm/fdboost.png?compact=true)](https://nodei.co/npm/fdboost/)
 ```
 
 ## License
