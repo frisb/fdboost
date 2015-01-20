@@ -10,8 +10,6 @@ Includes utilities for encoding tuples with strongly typed values and a high per
 
 This module is still early alpha and work is in progress. All contributions are welcome.
 
-
-
 ## Todo
 
 Polish comments 
@@ -23,7 +21,6 @@ Debug boundariestask class
 ## Installation
 ```
 npm install fdboost
-
 ```
 
 ## License
