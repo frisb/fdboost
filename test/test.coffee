@@ -1,6 +1,6 @@
 require('coffee-script/register')
 assert = require('assert')
-FDBoost = require('../lib/index')()
+FDBoost = require('../src/index')()
 
 testType = (prefix, typeName, value) ->
   describe typeName, ->
@@ -29,7 +29,7 @@ testAll = (prefix) ->
       testType(prefix, 'boolean true', true)
       testType(prefix, 'boolean false', false)
       testType(prefix, 'date', new Date())
-      testType(prefix, 'mixed array', [{  }, 'string', 1, [1.23]])
+      testType(prefix, 'mixed array', [{  }, 'string', [1.23]])
       testType(prefix, 'object', { x: 1, y: 2 })
 
       describe 'function', ->
