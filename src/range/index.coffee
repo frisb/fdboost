@@ -14,7 +14,7 @@ module.exports = (FDBoost) ->
      * @return {RangeNamespace} a RangeNamespace instance.
     ###
     constructor: ->
-      @BoundariesTask = require('./boundariestask')(FDBoost)
+      # @BoundariesTask = require('./boundariestask')(FDBoost)
       @Reader = require('./reader')(FDBoost)
       
     countKeys: require('./countkeys')(FDBoost)
