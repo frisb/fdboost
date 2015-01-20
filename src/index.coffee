@@ -10,6 +10,7 @@ class FDBoost
 
   init: (fdb) ->
     @__fdb = fdb if fdb
+    return
   
   Debug: require('./debug')
   

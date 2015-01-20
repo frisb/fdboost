@@ -2,16 +2,22 @@ surreal = require('surreal')
 AbstractAdapter = require('./abstract')
 EPOCH_DATE = new Date(1900, 0, 1)
 
-class Undefined extends Buffer
-class String extends Buffer
-class Integer extends Buffer
-class Double extends Buffer
-class Boolean extends Buffer
-class Null extends Buffer
-class DateTime extends Buffer
-class Array extends Buffer
-class Object extends Buffer
-class Function extends Buffer
+class TypedBuffer extends Buffer
+  toBuffer: ->
+    buffer = new Buffer(@length - 1)
+    @copy(buffer, 0, 1)
+    buffer
+
+class Undefined extends TypedBuffer
+class String extends TypedBuffer
+class Integer extends TypedBuffer
+class Double extends TypedBuffer
+class Boolean extends TypedBuffer
+class Null extends TypedBuffer
+class DateTime extends TypedBuffer
+class Array extends TypedBuffer
+class Object extends TypedBuffer
+class Function extends TypedBuffer
 
 ###*
  * Get an Adapter factory object to provide an adaptor for typeCode

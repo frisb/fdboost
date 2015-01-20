@@ -39,6 +39,7 @@ class Debug
         @log('debug error')
         console.log(e.message)
       @buf[description] = data
+      return
       
   log: (text) ->
     writeln = writelns[@category]
