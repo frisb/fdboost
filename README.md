@@ -10,34 +10,7 @@ Includes utilities for encoding tuples with strongly typed values and a high per
 
 This module is still early alpha and work is in progress. All contributions are welcome.
 
-## API
 
-#### Timeously(options, callback)
-
-* `options` Object
-  * `name` String. Name.
-  * `type` PeriodType. The type of interval.
-  * `interval` Number Optional. The number of interval periods between each event callback. Defaults to 1.
-  * `start` Number Optional. The starting point of the interval, the modulo of the Interval periods and the start must equal 0. Defaults to 1.
-* `callback` Function. The callback has argument `(response)`, a Dynect JSON [Response](Response.md)
-
-Returns a Timeously instance.
-
-#### Timeously.PeriodTypes
-
-* `MINUTELY`
-* `HOURLY`
-* `DAILY`
-* `WEEKLY`
-* `MONTHLY`
-
-#### instance.start()
-
-Starts the scheduler.
-
-#### instance.stop()
-
-Stops the scheduler.
 
 ## Todo
 
