@@ -24,7 +24,6 @@ Debug boundariestask class
 ```
 npm install fdboost
 
-[![npm status badge](https://nodei.co/npm/fdboost.png?compact=true)](https://nodei.co/npm/fdboost/)
 ```
 
 ## License
