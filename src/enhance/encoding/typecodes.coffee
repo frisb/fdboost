@@ -45,4 +45,4 @@ module.exports =
         else if (value instanceof Array) then @array
         else if (value instanceof Object)  then @object
         else
-          throw new Error("the encode function accepts only string, number, boolean, date, array and object")
+          throw new TypeError('Value must either be a string, integer, double, boolean, date, array, object or function')

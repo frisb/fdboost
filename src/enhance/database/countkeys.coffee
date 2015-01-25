@@ -39,24 +39,11 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 # > for the last segment, we don't need to wait for a getKey to complete before issuing the next, so we could split the segment into 4 (or more), do the getKey() in parallel, detect the quarter that cross the boundary, and iterate again until the size is small
 # > once the window size is small enough, we can switch to using getRange to read the last segment in one shot, instead of iterating with window size 16, 8, 4, 2 and 1 (the wost case being 2^N - 1 items remaning)
 
-
-
-###* Counts keys over a range.
- * @param {object} tr Optional Transaction
- * @param {object} options Provider specific configuration options.
- * @param {Object} begin Begin inclusive key.
- * @param {Object} end End exclusive key.
- * @param {Object} progress Function called to display progress events.
- * @param {Function} callback Function called on completion.
-###
-
-module.exports = (FDBoost) ->
-  fdb = FDBoost.fdb
-  debug = FDBoost.Debug('FDBoost.range.countKeys')
+module.exports = (fdboost) ->
+  fdb = fdboost.fdb
   
   count = (tr, options, callback) ->
-    beginInclusive = options.begin
-    endExclusive = options.end
+    {begin, end, progress} = options
     
     INIT_WINDOW_SIZE = 1 << 8 # start at 256
     MAX_WINDOW_SIZE = 1 << 16 # never use more than 65536
@@ -66,7 +53,7 @@ module.exports = (FDBoost) ->
       if (err)
         callback(err)
       else
-        if (cursor >= endExclusive)
+        if (cursor >= end)
           # the range is empty !
         	callback(null, 0)
         else
@@ -78,13 +65,12 @@ module.exports = (FDBoost) ->
           last = false
   
           onProgress = (cur) ->
-            c = if cur instanceof fdb.KeySelector then cur.key else cur
-            
-            debug.buffer('iteration', iter)
-            debug.buffer('counter', counter)
-            debug.buffer('windowSize', windowSize)
-            debug.buffer('cursor', 'utf8', Buffer.prototype.toString, c)
-            debug.log('progress')
+            if (progress)
+              progress
+                cursor: if cur instanceof fdb.KeySelector then cur.key else cur
+                iteration: iter
+                counter: counter
+                windowSize: windowSize
   
             return
   
@@ -126,7 +112,7 @@ module.exports = (FDBoost) ->
             # Count the keys by reading them. Also, we know that there can not be more than windowSize - 1 remaining
   
             begin = fdb.KeySelector.firstGreaterThan(cursor) # cursor has already been counted once
-            end = if endExclusive instanceof fdb.KeySelector then endExclusive else fdb.KeySelector.firstGreaterOrEqual(endExclusive) 
+            end = if end instanceof fdb.KeySelector then end else fdb.KeySelector.firstGreaterOrEqual(end) 
             options =
               limit: windowSize - 1
               streamingMode: fdb.streamingMode.want_all
@@ -137,7 +123,7 @@ module.exports = (FDBoost) ->
                 innerCallback(err)
               else
                 counter += arr.length
-                onProgress(endExclusive)
+                onProgress(end)
                 ++iter
                 innerCallback(null, counter)
   
@@ -190,7 +176,7 @@ module.exports = (FDBoost) ->
                 # BUGBUG: getKey(...) always truncate the result to \xff if the selected key would be past the end,
                 # so we need to fall back immediately to the binary search and/or geRange if next === \xff
   
-                if (next > endExclusive)
+                if (next > end)
                   doubleBack()
                 else
                   # the range is not finished, advance the cursor
@@ -201,7 +187,7 @@ module.exports = (FDBoost) ->
             return
   
           stride = ->
-            getNextKey() if (cursor < endExclusive)
+            getNextKey() if (cursor < end)
             return
   
           stride()
@@ -209,17 +195,20 @@ module.exports = (FDBoost) ->
       return
   
     # start looking for the first key in the range
-    tr.snapshot.getKey(fdb.KeySelector.firstGreaterOrEqual(beginInclusive), getCursorCallback)
+    tr.snapshot.getKey(fdb.KeySelector.firstGreaterOrEqual(begin), getCursorCallback)
     return
   
-  (tr, options, callback) ->
-    if (!options)
-      options = tr
-      tr = null
-    else if (typeof(options) is 'function')
-      callback = options
-      options = tr
-      tr = null
-      
-    transactionalCount = fdb.transactional(count)
-    transactionalCount(tr || FDBoost.db, options, callback)
+  ###* Counts keys over a range.
+   * @param {object} tr Optional Transaction
+   * @param {object} options Provider specific configuration options.
+   * @param {Object} begin Begin inclusive key.
+   * @param {Object} end End exclusive key.
+   * @param {Object} progress Function called to display progress events.
+   * @param {Function} callback Function called on completion.
+  ###
+  (options, callback) ->
+    throw new Error('options cannot be undefined') unless options
+
+    fdb.future.create (futureCb) =>
+      count(@, options, futureCb)
+    , callback

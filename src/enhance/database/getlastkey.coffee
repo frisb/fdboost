@@ -1,15 +1,15 @@
 ###*
- * Get the FDBoost~range~getLastKey method
+ * Get the Transaction~getLastKey method
  * @method
- * @param {object} FDBoost FDBoost instance.
+ * @param {object} fdboost FDBoost instance.
  * @return {function} getLastKey
 ###      
-module.exports = (FDBoost) ->
-  debug = FDBoost.Debug('FDBoost.range.getLastKey')
+module.exports = (fdboost) ->
+  debug = fdboost.Debug('Transaction.getLastKey')
   
   ###*
-   * The callback format for the FDBoost~range~getLastKey method
-   * @callback FDBoost~range~getLastKeyCallback
+   * The callback format for the Transaction~getLastKey method
+   * @callback Transaction~getLastKeyCallback
    * @param {Error} error An error instance representing the error during the execution.
    * @param {Buffer} lastKey The Buffer value if the getLastKey method was successful.
   ###
@@ -19,7 +19,7 @@ module.exports = (FDBoost) ->
    * @method
    * @param {object} tr Transaction.
    * @param {(Buffer|fdb.KeySelector)} keyPrefix KeySelector or Buffer value.
-   * @param {FDBoost~range~getLastKeyCallback} callback Callback.
+   * @param {Transaction~getLastKeyCallback} callback Callback.
    * @return {undefined}
   ###      
   keyToString = (key) ->
@@ -44,14 +44,9 @@ module.exports = (FDBoost) ->
       
     return
     
-  (tr, keyPrefix, callback) ->
-    if (!callback)
-      callback = keyPrefix if keyPrefix
-      keyPrefix = tr
-      tr = null
-      
-    transactionGetLastKey = FDBoost.fdb.transactional(getLastKey)
-    transactionGetLastKey(tr || FDBoost.db, keyPrefix, callback)
-  
-  
-        
+  (keyPrefix, callback) ->
+    throw new Error('keyPrefix cannot be undefined') unless keyPrefix
+
+    fdb.future.create (futureCb) =>
+      getLastKey(@, keyPrefix, futureCb)
+    , callback

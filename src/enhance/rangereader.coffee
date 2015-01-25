@@ -16,9 +16,9 @@ resolveKey = (k) ->
  * @param {object} FDBBoost FDBBoost instance.
  * @return {Reader} Reader
 ###      
-module.exports = (FDBoost) ->
-  fdb = FDBoost.fdb
-  debug = FDBoost.Debug('FDBoost.range.Reader')
+module.exports = (fdboost) ->
+  fdb = fdboost.fdb
+  debug = fdboost.Debug('fdb.RangeReader')
   
   ###*
    * The callback format for the iterate method
@@ -59,7 +59,7 @@ module.exports = (FDBoost) ->
           
   transactionalIterate = fdb.transactional(iterate)
   
-  class Reader extends EventEmitter
+  fdb.RangeReader = class RangeReader extends EventEmitter
     ###*
      * Creates a new Reader instance
      * @class
@@ -130,7 +130,7 @@ module.exports = (FDBoost) ->
         debug.buffer('end', 'utf8', Buffer.prototype.toString, @end.key)
         callback(null, @end)
       else
-        FDBoost.range.getLastKey(tr, @begin, callback)
+        tr.getLastKey(@begin, callback)
         
       return
     
@@ -268,7 +268,7 @@ module.exports = (FDBoost) ->
     execute: (tr, iteratorType) ->
       if (typeof(tr) is 'string')
         iteratorType = tr
-        tr = null
+        tr = fdb.open()
       
       debug.log('execute')
         
@@ -295,9 +295,10 @@ module.exports = (FDBoost) ->
         return
         
       txi = =>
-        transactionalIterate(tr || FDBoost.db, @, iteratorType, pastVersionCatchingCallback)
+        transactionalIterate(tr || fdboost.db, @, iteratorType, pastVersionCatchingCallback)
         return
         
       txi()
       
       return
+  return
