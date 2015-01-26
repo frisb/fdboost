@@ -1,10 +1,10 @@
-# FDBoost 
+# fdboost 
 [![Build Status](https://travis-ci.org/frisb/fdboost.png)](http://travis-ci.org/frisb/fdboost)
 [![Dependency Status](https://gemnasium.com/frisb/fdboost.svg)](https://gemnasium.com/frisb/fdboost)
 [![Code Climate](https://codeclimate.com/github/frisb/fdboost/badges/gpa.svg)](https://codeclimate.com/github/frisb/fdboost)
 [![npm version](https://badge.fury.io/js/fdboost.svg)](http://badge.fury.io/js/fdboost)
 
-FDBoost is a collection of utilities for FoundationDB enhancing the functionality of the FoundationDB node.js bindings.
+fdboost is a collection of utilities for FoundationDB enhancing the functionality of the FoundationDB node.js bindings.
 
 Includes utilities for encoding tuples with strongly typed values and a high performance range key counting method (thanks to Christophe Chevalier @Doxsense).
 

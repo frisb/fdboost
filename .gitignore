@@ -29,7 +29,8 @@ node_modules
 
 .DS_Store
 
-enhance.coffee
 demo.coffee
 int.coffee
 int.js
+src/debug_2.coffee
+src/debug_3.coffee
