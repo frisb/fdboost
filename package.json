@@ -8,7 +8,7 @@
       "url": "http://frisB.com"
     }
   ],
-  "main": "src/",
+  "main": "lib/",
   "engines": {
     "node": ">= 0.8.x"
   },
