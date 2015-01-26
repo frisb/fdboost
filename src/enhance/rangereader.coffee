@@ -16,10 +16,9 @@ resolveKey = (k) ->
  * @param {object} FDBBoost FDBBoost instance.
  * @return {Reader} Reader
 ###      
-module.exports = (fdboost) ->
-  fdb = fdboost.fdb
-  debug = fdboost.Debug('fdb.RangeReader')
-  
+module.exports = (fdb, debug) ->
+  db = fdb.open()
+
   ###*
    * The callback format for the iterate method
    * @callback iterateCallback
@@ -38,13 +37,15 @@ module.exports = (fdboost) ->
    * @return {undefined}
   ###      
   iterate = (tr, reader, iteratorType, callback) ->
-    debug.buffer('iteratorType', iteratorType)
+    debug (writer) ->
+      writer.buffer('iteratorType', iteratorType)
     
     getIteratorCallback = (err, iterator) ->
       if (err)
         callback(err)
       else
-        debug.log('iterate')
+        debug (writer) ->
+          writer.log('iterate')
         
         switch iteratorType
           when 'array' then reader.toArray(iterator, callback)
@@ -93,14 +94,15 @@ module.exports = (fdboost) ->
       @streamingMode = options.streamingMode
       @nonTransactional = options.nonTransactional || false
       @snapshot = options.snapshot || false
-      
-      debug.buffer('begin', 'utf8', Buffer.prototype.toString, resolveKey(options.begin))
-      debug.buffer('end', 'utf8', Buffer.prototype.toString, resolveKey(options.end))
-      debug.buffer('limit', options.limit)
-      debug.buffer('reverse', options.reverse)
-      debug.buffer('streamingMode', options.streamingMode)
-      debug.buffer('nonTransactional', options.nonTransactional)
-      debug.buffer('snapshot', options.snapshot)
+
+      debug (writer) ->
+        writer.buffer('begin', resolveKey(options.begin).toString('utf8')) if options.begin
+        writer.buffer('end', resolveKey(options.end).toString('utf8')) if options.end
+        writer.buffer('limit', options.limit)
+        writer.buffer('reverse', options.reverse)
+        writer.buffer('streamingMode', options.streamingMode)
+        writer.buffer('nonTransactional', options.nonTransactional)
+        writer.buffer('snapshot', options.snapshot)
       
       @on 'data', (data) =>
         if (data instanceof Array)
@@ -127,7 +129,9 @@ module.exports = (fdboost) ->
     ###      
     getLastKey: (tr, callback) ->
       if (@end)
-        debug.buffer('end', 'utf8', Buffer.prototype.toString, @end.key)
+        debug (writer) ->
+          writer.buffer('end', @end.key.toString('utf8'))
+
         callback(null, @end)
       else
         tr.getLastKey(@begin, callback)
@@ -167,7 +171,8 @@ module.exports = (fdboost) ->
      * @return {undefined}
     ###      
     getIterator: (tr, callback) ->
-      debug.log('getIterator')
+      debug (writer) ->
+        writer.log('getIterator')
       
       options = 
         limit: @limit
@@ -183,14 +188,16 @@ module.exports = (fdboost) ->
           if (err)
             callback(err)
           else
-            debug.log('getLastKey')
-            
             iterator = ts.getRange(begin, lastKey, options)
             
-            debug.buffer('method', 'getRange')
-            debug.buffer('begin', 'utf8', Buffer.prototype.toString, resolveKey(begin))
-            debug.buffer('end', 'utf8', Buffer.prototype.toString, resolveKey(lastKey))
-            debug.buffer('options', options)
+
+            debug (writer) ->
+              writer.log('getLastKey')
+
+              writer.buffer('method', 'getRange')
+              writer.buffer('begin', resolveKey(begin).toString('utf8'))
+              writer.buffer('end', resolveKey(lastKey).toString('utf8'))
+              writer.buffer('options', options)
             
             callback(null, iterator)
             
@@ -198,9 +205,10 @@ module.exports = (fdboost) ->
       else
         iterator = ts.getRangeStartsWith(@begin, options)
         
-        debug.buffer('method', 'getRangeStartsWith')
-        debug.buffer('prefix', 'utf8', Buffer.prototype.toString, resolveKey(@begin))
-        debug.buffer('options', options)
+        debug (writer) =>
+          writer.buffer('method', 'getRangeStartsWith')
+          writer.buffer('prefix', resolveKey(@begin).toString('utf8'))
+          writer.buffer('options', options)
         
         callback(null, iterator)
         
@@ -268,9 +276,10 @@ module.exports = (fdboost) ->
     execute: (tr, iteratorType) ->
       if (typeof(tr) is 'string')
         iteratorType = tr
-        tr = fdb.open()
+        tr = db
       
-      debug.log('execute')
+      debug (writer) ->
+        writer.log('execute')
         
       complete = (err, result) =>
         if (err)
@@ -280,7 +289,9 @@ module.exports = (fdboost) ->
         return
       
       toBeContinued = =>
-        debug.log('continue')
+        debug (writer) ->
+          writer.log('continue')
+
         tr.reset()
         @emit('continue')
         txi()
@@ -295,7 +306,7 @@ module.exports = (fdboost) ->
         return
         
       txi = =>
-        transactionalIterate(tr || fdboost.db, @, iteratorType, pastVersionCatchingCallback)
+        transactionalIterate(tr || db, @, iteratorType, pastVersionCatchingCallback)
         return
         
       txi()

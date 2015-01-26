@@ -1,7 +1,8 @@
+chalk = require('chalk')
 surreal = require('surreal')
-Writeln = require('writeln')
+debug = require('debug')
 
-writelns = {}
+debugs = {}
 
 jsonShrink = (s) ->
   s = surreal.serialize(s, 2) if typeof s isnt 'string'
@@ -20,40 +21,33 @@ jsonShrink = (s) ->
   s
 
 class Debug
-  constructor: (@category, @isActive) ->
+  constructor: (@category, @color) ->
     @buf = null
-    
-  buffer: (description, data, transformer, scope) ->
-    if (@isActive && typeof(data) isnt 'undefined')
+
+  buffer: (description, data) ->
+    if (@isActive && description)
       @buf = Object.create(null) if @buf is null
+      @buf[description] = data || ''
+
+    return
       
-      try
-        data = transformer.call(scope, data) if transformer && typeof scope isnt 'undefined'
-      catch e
-        @log()
-        @buffer('message', e.message)
-        @buffer('description', description)
-        @buffer('data', data)
-        @buffer('transformer', transformer)
-        @buffer('scope', scope)
-        @log('debug error')
-        console.log(e.message)
-      @buf[description] = data
-      return
-      
-  log: (text) ->
-    writeln = writelns[@category]
+  log: (text, description, data) ->
+    @buffer(description, data) if description
+
+    d = debugs[@category]
     
-    if (!writeln)
-      writeln = new Writeln(@category)
-      writelns[@category] = writeln
+    if (!d)
+      d = debug(@category)
+      debugs[@category] = d
     
     if (@buf isnt null)
-      metadata = jsonShrink(@buf)
+      metadata = chalk.dim(jsonShrink(@buf))
       @buf = null
     
-    writeln.debug(text, metadata)
+    d(text, metadata)
     
-module.exports = (category) ->
-  new Debug(category, process.env.NODE_ENV isnt 'production')
-    
+module.exports = (category, color) ->
+  instance = new Debug(category, color)
+
+  (callback) ->
+    callback(instance)

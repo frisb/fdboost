@@ -2,11 +2,10 @@ module.exports = class EncodingNamespace
   ###*
    * Creates a new EncodingNamespace instance
    * @class
-   * @param {FDBoost} fdboost FDBoost instance.
    * @property {object} typeCodes Type codes dictionary.
    * @return {EncodingNamespace} an EncodingNamespace instance.
   ###
-  constructor: (@fdboost) ->
+  constructor: (@fdb) ->
     @adapters = require('./adapters')(@)
 
   ###*
@@ -57,5 +56,5 @@ module.exports = class EncodingNamespace
     adapter = new TypedAdapter(buffer, startPos + 1)
     adapter.value
 
-module.exports = (fdboost) ->
-  fdboost.fdb.encoding = new EncodingNamespace(fdboost)
+module.exports = (fdb) ->
+  fdb.encoding = new EncodingNamespace(fdb)

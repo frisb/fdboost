@@ -43,6 +43,8 @@ module.exports =
         if (value is null) then @null
         else if (value instanceof Date) then @datetime
         else if (value instanceof Array) then @array
+        else if (Buffer.isBuffer(value))
+          throw new TypeError("Value cannot be a buffer")
         else if (value instanceof Object)  then @object
         else
           throw new TypeError('Value must either be a string, integer, double, boolean, date, array, object or function')

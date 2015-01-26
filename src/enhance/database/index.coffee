@@ -1,9 +1,7 @@
-module.exports = (fdboost) ->
-	fdb = fdboost.fdb
-
+module.exports = (fdb, debug) ->
 	enhancements = 
-    getLastKey: require('./getlastkey')(fdboost)
-    countKeys: require('./countKeys')(fdboost)
+    getLastKey: require('./getlastkey')(fdb, debug)
+    countKeys: require('./countKeys')(fdb, debug)
 
   enhanceDatabase = (Database) ->
     e = (fnName, fn) ->

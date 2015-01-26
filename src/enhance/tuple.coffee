@@ -1,6 +1,4 @@
-module.exports = (fdboost) ->
-	fdb = fdboost.fdb
-
+module.exports = (fdb) ->
 	enhancements = 
 		packEncoded: (arr, prefix) ->
 			encodedArr = (fdb.encoding.encode(item, prefix) for item in arr)

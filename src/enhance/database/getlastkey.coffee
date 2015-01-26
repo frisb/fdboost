@@ -1,12 +1,11 @@
 ###*
  * Get the Transaction~getLastKey method
  * @method
- * @param {object} fdboost FDBoost instance.
+ * @param {object} fdb fdb module.
+ * @param {object} debug Debug instance.
  * @return {function} getLastKey
 ###      
-module.exports = (fdboost) ->
-  debug = fdboost.Debug('Transaction.getLastKey')
-  
+module.exports = (fdb, debug) ->
   ###*
    * The callback format for the Transaction~getLastKey method
    * @callback Transaction~getLastKeyCallback
@@ -29,8 +28,9 @@ module.exports = (fdboost) ->
       key
   
   getLastKey = (tr, keyPrefix, callback) ->
-    debug.buffer('keyPrefix', keyPrefix, keyToString, @)
-    debug.log('getLastKey')
+    debug (writer) ->
+      writer.buffer('keyPrefix', keyToString(keyPrefix))
+      writer.log('getLastKey')
       
     iterator = tr.getRangeStartsWith(keyPrefix, { limit: 1, reverse: true })
     iterator.toArray (err, arr) ->
