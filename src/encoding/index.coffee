@@ -57,7 +57,7 @@ module.exports = (FDBoost) ->
           startPos = prefix.length
         else
           throw new Error("Invalid prefix \"#{prefix}\".")
-          
+
       typeCode = buffer.readUInt8(startPos)
       TypedAdapter = @adapters.get(typeCode)
       
