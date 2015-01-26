@@ -29,7 +29,7 @@ module.exports = (FDBoost) ->
       startPos = 1 # accounting for type code
       typeCode = @adapters.types.get(value)
       TypedAdapter = @adapters.get(typeCode)
-      
+
       if (prefix)
         startPos += prefix.length
         adapter = new TypedAdapter(value, startPos)

@@ -1,15 +1,15 @@
 ###*
  * Type codes dictionary.
  * @instance
- * @property {integer} undefined
- * @property {integer} string
+ * @property {undefined} undefined
+ * @property {string} string
  * @property {integer} integer
- * @property {integer} double
- * @property {integer} boolean
- * @property {integer} null
- * @property {integer} date
- * @property {integer} array
- * @property {integer} object
+ * @property {double} double
+ * @property {boolean} boolean
+ * @property {null} null
+ * @property {datetime} datetime
+ * @property {array} array
+ * @property {object} object
  * @function {Function} get Returns typeCode value for name.
 ###   
 module.exports =
@@ -31,6 +31,8 @@ module.exports =
    * @return {integer} Type code value
   ###    
   'get': (value) ->
+    console.log('typeof', typeof value, value)
+
     switch typeof value
       when 'undefined' then @undefined
       when 'string' then @string
@@ -43,6 +45,8 @@ module.exports =
         if (value is null) then @null
         else if (value instanceof Date) then @datetime
         else if (value instanceof Array) then @array
+        else if (Buffer.isBuffer(value))
+          throw new TypeError("Cannot encode buffers")
         else if (value instanceof Object)  then @object
         else
-          throw new Error("the encode function accepts only string, number, boolean, date, array and object")
+          throw new TypeError("the encode function accepts only string, number, boolean, date, array and object")
