@@ -9,7 +9,7 @@ module.exports = (encoding) ->
 	    Array
 
 	  loadData: (value) ->
-	    d = encoding.FDBoost.fdb.tuple.pack(encoding.encode(item) for item in value)
+	    d = encoding.fdb.tuple.pack(encoding.encode(item) for item in value)
 	    @initData(d.length)
 	    @copyFrom(d)
 	    return
@@ -17,4 +17,4 @@ module.exports = (encoding) ->
 	  getValue: (buffer) ->
 	    d = new Buffer(buffer.length - @pos)
 	    buffer.copy(d, 0, @pos)
-	    (encoding.decode(item) for item in encoding.FDBoost.fdb.tuple.unpack(d))
+	    (encoding.decode(item) for item in encoding.fdb.tuple.unpack(d))
