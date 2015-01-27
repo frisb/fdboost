@@ -8,11 +8,13 @@ fdboost is a collection of utilities for FoundationDB enhancing the functionalit
 
 Includes utilities for encoding tuples with strongly typed values and a high performance range key counting method (thanks to Christophe Chevalier @Doxsense).
 
-This module is evolving speedily and further documentation and tests will be included over the coming days. All contributions are welcome.
+This module is evolving speedily and further documentation and tests will be included over the coming days. 
+
+All contributions are welcome.
 
 ## API activation
 
-fdboost has 3 alternative methods of activation, each of which returns a fuctionality enhanced version of a typical `fdb` module.
+fdboost has 3 alternative methods of activation, each of which returns a functionally enhanced version of a typical `fdb` module.
 
 Simple
 ```js
@@ -111,7 +113,7 @@ npm install fdboost
 
 (The MIT License)
 
-Copyright (c) frisB.com &lt;play@frisb.com&gt;, Copyright (c) FoundationDB, LLC
+Copyright (c) frisB.com &lt;play@frisb.com&gt; Copyright (c) FoundationDB, LLC
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
