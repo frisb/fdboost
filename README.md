@@ -40,11 +40,29 @@ require('fdboost').use(fdb);
 
 API activation surgically grafts a collection of new functions and namespaces onto carefully targetted facets of the `fdb` module prototype chain.
 
+## Encoding objects
+
+fdb.encoding.**encode(**_value, [prefix]_**)**
+
+fdb.encoding.**decode(**_buffer, [prefix]_**)**
+
+## Database objects
+
+Database.**countKeys(**_options, [callback]_**)**
+
+Database.**getLastKey(**_keyPrefix, [callback]_**)**
+
+## Transaction objects
+
+Transaction.**countKeys(**_options, [callback]_**)**
+
+Transaction.**getLastKey(**_keyPrefix, [callback]_**)**
+
 ## RangeReader objects
 
 A RangeReader object provides an elegant method of reading data using the node.js `EventEmitter` as an alternative to the `LazyIterator` model.
 
-_class_ fdb.**RangeReader(**_options_**)**
+_class_ **RangeReader(**_options_**)**
 
 * `options.begin` (`Buffer|fdb.KeySelector`) First key in the reader range.
 * `[options.end=undefined]` (`Buffer|fdb.KeySelector`)  Last key in the reader range.
@@ -54,7 +72,7 @@ _class_ fdb.**RangeReader(**_options_**)**
 * `[options.nonTransactional=false]` (`boolean`)  Reset transaction on expiry and start.
 * `[options.snapshot=false]` (`boolean`)  Defines whether range reads should be snapshot reads.
 
-fdb.RangeReader.**execute(**_[tr]_, iteratorType**)**
+RangeReader.**execute(**_[tr], iteratorType_**)**
 
 * `[tr=null]` (`object`) Transaction.
 * `iteratorType` (`string`) Value can be `batch`, `each` or `array`.
@@ -69,8 +87,11 @@ fdb.RangeReader.**execute(**_[tr]_, iteratorType**)**
 
 `end`
 
+## Tuple layer
 
+fdb.tuple.**packEncoded(**_arr, [prefix]_**)**
 
+fdb.tuple.**unpackEncoded(**_key, [prefix]_**)**
 
 
 ## Todo
