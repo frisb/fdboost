@@ -278,6 +278,8 @@ module.exports = (fdb, debug) ->
         iteratorType = tr
         tr = db
       
+      console.log('execute', iteratorType)
+
       debug (writer) ->
         writer.log('execute')
         

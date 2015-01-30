@@ -17,7 +17,7 @@ module.exports = class EncodingNamespace
   ###
   encode: (value, prefix) ->
     return value if value is '\xff'
-    
+
     startPos = 1 # accounting for type code
     typeCode = @adapters.types.get(value)
     TypedAdapter = @adapters.get(typeCode)
