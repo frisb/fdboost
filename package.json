@@ -1,7 +1,7 @@
 {
   "name": "fdboost",
   "description": "Performance enhanced utilities for FoundationDB",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "contributors": [
     {
       "name": "Ashley Brener",

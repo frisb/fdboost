@@ -1,7 +1,7 @@
 module.exports = (fdb, debug) ->
 	enhancements = 
     getLastKey: require('./getlastkey')(fdb, debug)
-    countKeys: require('./countKeys')(fdb, debug)
+    countKeys: require('./countkeys')(fdb, debug)
 
   enhanceDatabase = (Database) ->
     e = (fnName, fn) ->
