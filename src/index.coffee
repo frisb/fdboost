@@ -14,9 +14,10 @@ class Booster
   Object.defineProperty @::, 'factory',
     get: ->
       factory = (version) ->
-        console.log(version)
-
-        factory.apiVersion(version)
+        if (typeof(version) is 'object')
+          factory.use(version)
+        else
+          factory.apiVersion(version)
 
       factory.apiVersion = (version = latestVersion) =>
         @fdb = require('fdb').apiVersion(version) if @fdb is null
