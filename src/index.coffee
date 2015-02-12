@@ -23,7 +23,7 @@ class Booster
         @fdb = require('fdb').apiVersion(version) if @fdb is null
         @boost(@fdb)
 
-      factory.use = (fdb) ->
+      factory.use = (fdb) =>
         throw new Error('Must provide fdbModule instance') unless fdb
         @boost(fdb)
 
