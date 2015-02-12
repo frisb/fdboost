@@ -277,8 +277,6 @@ module.exports = (fdb, debug) ->
       if (typeof(tr) is 'string')
         iteratorType = tr
         tr = db
-      
-      console.log('execute', iteratorType)
 
       debug (writer) ->
         writer.log('execute')

@@ -14,6 +14,8 @@ class Booster
   Object.defineProperty @::, 'factory',
     get: ->
       factory = (version) ->
+        console.log(version)
+
         factory.apiVersion(version)
 
       factory.apiVersion = (version = latestVersion) =>
